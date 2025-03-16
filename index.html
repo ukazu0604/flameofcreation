@@ -1,72 +1,54 @@
 <!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>シンプルなHTMLサンプル</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        header {
-            background: #35424a;
-            color: #ffffff;
-            padding: 10px 0;
-            text-align: center;
-        }
-        nav {
-            margin: 15px 0;
-        }
-        nav a {
-            margin: 0 15px;
-            color: #ffffff;
-            text-decoration: none;
-        }
-        main {
-            padding: 20px;
-        }
-        footer {
-            text-align: center;
-            padding: 10px 0;
-            background: #35424a;
-            color: #ffffff;
-            position: relative;
-            bottom: 0;
-            width: 100%;
-        }
-        @media (max-width: 600px) {
-            nav {
-                display: block;
-            }
-            nav a {
-                display: block;
-                margin: 5px 0;
-            }
-        }
-    </style>
-</head>
+<!-- <?!= HtmlService.createHtmlOutputFromFile('css').getContent(); ?> -->
+
 <body>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-10 custom-container">
+        <h4 class="text-center">Flame of Creation</h4>
+        <a id="kihon"></a>
+        <a name="question" id="question"></a>
+        <div name="answer" class="text-left mt-3 p-3 border rounded"
+          style="display:none;border: 2px solid #000;background-color: #292525;color:"></div>
+        <div id="result-div" class="mt-3"></div>
+        <textarea id="message" class="form-control mt-3" cols="80" rows="10"
+					placeholder="ここにメッセージを入力..."></textarea>
+        <div class="text-center mt-4">
+          <button id="newline-btn" class="btn btn-outline-primary">↩↩</button>
+          <button id="start-btn" class="btn btn-custom mr-2">Start</button>
+          <button id="stop-btn" class="btn btn-secondary mr-2">Stop</button>
+          <label for="model-select" class="mr-2"></label>
+          <select id="model-select" class="form-control d-inline-block dark-mode-select" style="width: auto;">
+            <option value="story">story</option>
+						<option value="normal">normal</option>
+						<option value="rag">RAG</option>
+						<option value="agenda">Agenda</option>
+            <option value="kihon">基本情報</option>
+					</select>
+          <div style="text-align: left;">
 
-<header>
-    <h1>ウェブサイトのタイトル</h1>
-    <nav>
-        <a href="#">ホーム</a>
-        <a href="#">サービス</a>
-        <a href="#">お問い合わせ</a>
-    </nav>
-</header>
+            <svg id="mindmap" style="width: 70vw; height:50vw"></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id='maintable' class="mt-5"></div>
+  </div>
 
-<main>
-    <h2>ようこそ</h2>
-    <p>これはシンプルなHTMLのサンプルです。レスポンシブデザインを使用して、さまざまなデバイスで適切に表示されます。</p>
-</main>
-
-<footer>
-    <p>© 2025 シンプルなウェブサイト</p>
-</footer>
-
+  <!-- <?!= HtmlService.createHtmlOutputFromFile('shortcut.js').getContent(); ?>
+  <?!= HtmlService.createHtmlOutputFromFile('markmap.js').getContent(); ?>
+  <?!= HtmlService.createHtmlOutputFromFile('llmGeneral.js').getContent(); ?>
+  <?!= HtmlService.createHtmlOutputFromFile('llmRag.js').getContent(); ?>
+  <?!= HtmlService.createHtmlOutputFromFile('kihon.js').getContent(); ?>
+  <?!= HtmlService.createHtmlOutputFromFile('voice.js').getContent(); ?> -->
+  <!-- <script>
+    var welcome = async()=>{
+      var content = await gemini("サイトにユーザーが到着しました。歓迎のメッセージをマークダウンで。ようこそ！から初めて。頑張りたくなるような言葉をかけてあげて", false);
+      displayMap(content);
+    }
+    welcome();
+  </script> -->
 </body>
+
 </html>
+<!-- <?!= HtmlService.createHtmlOutputFromFile('suna.js').getContent(); ?> -->
