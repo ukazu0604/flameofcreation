@@ -123,42 +123,40 @@ function createTable(content) {
     document.getElementById('maintable').appendChild(table);
 }
 
-</script >
 
-    <script>
-        function isMobile() {
-  // UserAgentでスマホ判定
-  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+function isMobile() {
+    // UserAgentでスマホ判定
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
 
-        // テキストを読み上げるメソッド'.text-to-read'
-        function readText(className) {
+// テキストを読み上げるメソッド'.text-to-read'
+function readText(className) {
     // すべてのテキストを取得
     var texts = document.querySelectorAll(`.${className}`);
-        var combinedText = '';
+    var combinedText = '';
 
     // 各要素のテキストを結合（<details>内も含む）
-            texts.forEach(function(element) {
-                combinedText += element.textContent + ' '; // textContentで隠れたテキストも取得
+    texts.forEach(function (element) {
+        combinedText += element.textContent + ' '; // textContentで隠れたテキストも取得
     });
 
-            // SpeechSynthesisのインスタンスを作成
-            var utterance = new SpeechSynthesisUtterance(combinedText);
+    // SpeechSynthesisのインスタンスを作成
+    var utterance = new SpeechSynthesisUtterance(combinedText);
 
-            // 音声の設定（オプション）
-            utterance.lang = 'ja-JP'; // 日本語に設定
-            utterance.volume = 1; // 音量（0.0 から 1.0）
-            utterance.rate = isMobile() ? 1.5 : 3; // 話す速度（0.1 から 10）
-            utterance.pitch = isMobile() ? 1.0 :1.3; // 声の高さ（0 から 2）
+    // 音声の設定（オプション）
+    utterance.lang = 'ja-JP'; // 日本語に設定
+    utterance.volume = 1; // 音量（0.0 から 1.0）
+    utterance.rate = isMobile() ? 1.5 : 3; // 話す速度（0.1 から 10）
+    utterance.pitch = isMobile() ? 1.0 : 1.3; // 声の高さ（0 から 2）
 
-            // 音声を合成して再生
-            window.speechSynthesis.speak(utterance);
+    // 音声を合成して再生
+    window.speechSynthesis.speak(utterance);
 }
 
-            function readAllText(){
-                readText('mondai');
-            readText('mondai');
-            readText('yougo');
-            readText('gemini');
-            readText('kotae');
+function readAllText() {
+    readText('mondai');
+    readText('mondai');
+    readText('yougo');
+    readText('gemini');
+    readText('kotae');
 }
