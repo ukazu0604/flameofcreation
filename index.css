@@ -1,0 +1,135 @@
+    body {
+      background-color: #121212;
+      color: #E0E0E0;
+    }
+
+    .custom-container,
+    .border {
+      background-color: #333333;
+      color: #E0E0E0;
+      border-color: #666666;
+    }
+
+    #message {
+      background-color: #222222;
+      color: #E0E0E0;
+      border-color: #444444;
+    }
+
+    .btn-outline-primary {
+      color: #BB86FC;
+      border-color: #BB86FC;
+    }
+
+    .btn-outline-primary:hover {
+      background-color: #BB86FC;
+      color: #121212;
+    }
+
+    .btn-custom {
+      background-color: #03DAC6;
+      color: #121212;
+    }
+
+    .btn-custom:hover {
+      background-color: #018786;
+      color: #FFFFFF;
+    }
+
+    .btn-secondary {
+      background-color: #666666;
+      color: #FFFFFF;
+    }
+
+    .btn-secondary:hover {
+      background-color: #444444;
+    }
+
+    pre {
+      background-color: #1e1e1e;
+      /* コードブロックの背景色 */
+      color: #dcdcdc;
+      /* コード文字色 */
+      padding: 4px;
+      border-radius: 4px;
+      display: block;
+    }
+
+    #model-select {
+      border: 1px solid #ccc;
+      padding: 5px;
+    }
+
+    .dark-mode-select {
+      background-color: #292525;
+      color: #ffffff;
+      border: 1px solid #444444;
+    }
+
+    .dark-mode-select option {
+      background-color: #292525;
+      color: #ffffff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background-color: #1e1e1e;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #333333;
+    }
+
+    th {
+      background-color: #333333;
+      color: #ffffff;
+    }
+
+    tr:nth-child(even) {
+      background-color: #2a2a2a;
+    }
+
+    tr:hover {
+      background-color: #444444;
+    }
+
+    img {
+      max-width: 100%;
+      /* 親要素の幅に収まる */
+      height: auto;
+      /* アスペクト比を保持 */
+      display: block;
+      background-color:#FFFFFF;
+      /* 余白をなくす */
+    }
+
+    hr {
+      border: none;
+      /* デフォルトの境界線を無効に */
+      height: 2px;
+      /* 線の太さ */
+      background-color: #FFFFFF;
+      /* 線の色 */
+      margin: 20px 0;
+      /* 上下の余白 */
+    }
+
+    /* ダークモード用のボタンスタイル */
+    .custom-button {
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #444;  /* ダークな背景色 */
+      color: #fff;             /* 文字色を白に */
+      border: none;
+      transition: all 0.3s;
+    }
+
+    .custom-button:hover {
+      background-color: #222; /* ホバー時さらに濃い背景色 */
+    }
