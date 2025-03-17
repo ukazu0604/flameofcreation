@@ -76,9 +76,17 @@ document.getElementById('message').addEventListener('keydown', function (event) 
     // Shift+Enterで改行、Enterだけで送信
     if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
+        scrollToTop();
         cleanAndRequest();
     }
 });
+
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // スムーズにスクロールするオプション
+    });
+}
 
 async function cleanAndRequest() {
     // 入力メッセージと回答の削除
