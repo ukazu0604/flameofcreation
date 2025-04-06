@@ -147,17 +147,17 @@ ${ask}`;
 }
 
 
-document.addEventListener('keydown', function(event) {
-    // CtrlキーとCキーが押された場合
-    if (event.ctrlKey  && event.key === 'c') {
-        event.preventDefault(); // デフォルトのコピー動作を防ぐ
+// document.addEventListener('keydown', function(event) {
+//     // CtrlキーとCキーが押された場合
+//     if (event.ctrlKey  && event.key === 'c') {
+//         event.preventDefault(); // デフォルトのコピー動作を防ぐ
 
-        const ansText = document.querySelector('.ans').innerText;
-        navigator.clipboard.writeText(ansText).then(() => {
-            alert('テキストがコピーされました！');
-        }).catch(err => {
-            console.error('コピーに失敗しました:', err);
-        });
-    }
-});
+//         const ansText = document.querySelector('.ans').innerText;
+//         navigator.clipboard.writeText(ansText).then(() => {
+//             alert('テキストがコピーされました！');
+//         }).catch(err => {
+//             console.error('コピーに失敗しました:', err);
+//         });
+//     }
+// });
 
