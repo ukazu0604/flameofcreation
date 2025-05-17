@@ -2,15 +2,13 @@
 async function RAG(ask) {
     // 改行をスペースに置き換える
     ask = ask.replace(/\n/g, '');
-    prompt =
-        `###### 以下の質問文をネットで検索します。
+    var system =
+        `あなたはネットで検索する単語を生成するボットです。
 適切な検索ワードのみを一行で返答してください。
 意味を取り違えないように慎重に答えてください。
 中国のサイトが引っかかってしまうので、ひらがなを一文字以上含めてください。
-<br>
-###### 質問文
-「${ask}」`
-    var query = await sendChatRequest(prompt, false);
+`
+    var query = await sendChatRequest(ask, false, system);
     var question = document.getElementsByName('question')[0];
     question.innerHTML = marked.parse("##### 検索中…");
     if (query == "") {

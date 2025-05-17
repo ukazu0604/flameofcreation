@@ -3,7 +3,7 @@ const clipboardIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height
 <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
 </svg>`
 
-async function sendChatRequest(ask, agenda) {
+async function sendChatRequest(ask, agenda, system) {
     var num = 0;
     // 整理できる部分 
     var allQuestion = document.getElementsByName('question')[num].innerHTML = "";
@@ -29,7 +29,7 @@ async function sendChatRequest(ask, agenda) {
     }
 
     answer.innerHTML = road;
-    var content = await gemini(ask, agenda);
+    var content = await gemini(ask, agenda, system);
     // var content = await llama(ask);
 
     if (agenda) {
@@ -41,17 +41,17 @@ async function sendChatRequest(ask, agenda) {
             answer.innerHTML = marked.parse(content);
         }
     } else {
- // Copy button
- let copyButton = document.createElement('button');
- copyButton.className = 'btn btn-secondary copy-button';
- copyButton.innerHTML = clipboardIcon;
- copyButton.onclick = () => {
-   navigator.clipboard.writeText(content).then(() => {
-     console.log('Text copied to clipboard');
-   }).catch(err => {
-     console.error('Failed to copy text:', err);
-   });
- };
+        // Copy button
+        let copyButton = document.createElement('button');
+        copyButton.className = 'btn btn-secondary copy-button';
+        copyButton.innerHTML = clipboardIcon;
+        copyButton.onclick = () => {
+            navigator.clipboard.writeText(content).then(() => {
+                console.log('Text copied to clipboard');
+            }).catch(err => {
+                console.error('Failed to copy text:', err);
+            });
+        };
 
 
 
@@ -59,8 +59,8 @@ async function sendChatRequest(ask, agenda) {
 <div class="ans">
 ${marked.parse(content)}<br>
 </div>`
-// Append the copy button to the answer element
-answer.appendChild(copyButton);
+        // Append the copy button to the answer element
+        answer.appendChild(copyButton);
     }
 
 
@@ -71,26 +71,39 @@ answer.appendChild(copyButton);
 
 };
 
-
-async function gemini(ask, agenda) {
+// 今は一回分の返信のみ対応。面倒で、、
+async function gemini(ask, agenda, system = "", history = "") {
     const apiKey = 'AIzaSyC1d-U0u7nZZ-1zoE6wwTHVJ7xsj2OnVJ';
     // const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-002:generateContent?key="+apiKey;
     // const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key="+apiKey;
-    const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=" + apiKey +"c"
+    const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=" + apiKey + "c"
     // const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8B:generateContent?key="+apiKey;
-    var data;
-    if (agenda) {
-        data = {
-            contents: [{ parts: [{ text: ask }] }],
-            generationConfig: { response_mime_type: 'application/json' }
-        };
-    } else {
-        data = {
-            contents: [{ parts: [{ text: ask }] }]
+
+    const contents = [];
+    // 実際に履歴の管理をするときはこれで追加していく。
+    if (history) {
+        contents.push({
+            role: "model",
+            parts: [{ text: history }]
+        });
+        alert(history);
+    }
+    contents.push({ role: "user", parts: [{ text: ask }] });
+
+    var data = {};
+    if (system) {
+        data.system_instruction = {
+            parts: [{ text: system }]   // ← ここがシステムプロンプト
         };
     }
-    console.log(ask)
-    var content = "";
+    data.contents = contents;
+
+    if (agenda) {
+        data.generationConfig = {
+            response_mime_type: 'application/json'
+        };
+    }
+    console.log(data);
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -108,7 +121,7 @@ async function gemini(ask, agenda) {
         const jsonData = await response.json();
 
         try {
-            content = jsonData.candidates[0].content.parts[0].text;
+            var content = jsonData.candidates[0].content.parts[0].text;
             console.log(content);
             console.log("成功！");
         } catch (error) {
