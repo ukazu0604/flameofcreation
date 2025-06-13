@@ -1,22 +1,17 @@
-
-// ページが読み込まれたときに特定のテキストボックスにフォーカスを当てる
 window.onload = function () {
     document.getElementById('message').focus();
 };
 
-// 改行ボタンの機能
 document.getElementById("newline-btn").addEventListener("click", addNewline);
-// ページ全体でショートカット (Ctrl + Shift ) を設定
 document.addEventListener("keydown", function (event) {
     if (event.ctrlKey && event.shiftKey) {
         addNewline();
         event.preventDefault(); // デフォルトの動作を無効化
     }
 });
-// 改行挿入の関数化
+
 function addNewline() {
     const textArea = document.getElementById("message");
-    // 入力チェック
     if (textArea.value.trim() !== "") { // 文字が入力されている場合
         // 入力メッセージと回答の削除
         ask = document.getElementById('message').value;
@@ -88,6 +83,7 @@ function scrollToTop() {
     });
 }
 
+system = "日本語で回答してください";// システムメッセージの初期値 返信用
 async function cleanAndRequest() {
     // 入力メッセージと回答の削除
     ask = document.getElementById('message').value;
@@ -103,20 +99,20 @@ async function cleanAndRequest() {
     if (ask.match(/^\n{2}/) || model == "rag") {
         RAG(ask);
     }
+    else if (ask.match(/^[\r\n]/)) {
+        var history = `${document.getElementById('kihon').innerText}
+        ${preAnswer.innerText}
+        `;
+        sendChatRequest(ask, false, system, history);
+    }
     else if (model == "agenda") {
-        var system = `##### agenda
+        system = `##### agenda
 ##### あなたは、スケジュール管理をする人です。
 ##### フォーマット
 {"schedule": [{"time": "", "activity": ""}, {"time": "", "activity": ""}]}
 ##### 履歴
 ${preAnswer.innerText}`
         sendChatRequest(ask, true, system);
-    } else if (ask.match(/^[\r\n]/)) {
-        var history = `${document.getElementById('kihon').innerText}
-${preAnswer.innerText}
-`;
-       
-        sendChatRequest(ask, false, "", history);
     } else if (!isNaN(parseFloat(ask)) || ask == "") {
 
         // 未入力は最新のものを
@@ -124,20 +120,20 @@ ${preAnswer.innerText}
         kihon(ask);
     }
     else if (model == "qa") {
-        var system = `よくある質問に回答するモード。最低五個質問を考えてそれに答えてください。
+        system = `よくある質問に回答するモード。最低五個質問を考えてそれに答えてください。
 質問は「Q:」で始まり、回答は「A:」で始まります。生成はQ:　で始めてください。見やすいように問題だけ太文字を使ってください。
 
   `
         sendChatRequest(ask, false, system);
     }
     else if (model == "story") {
-        var system = `対話物語モード。登場人物に会話させて本質が何かを考えさせる。
+        system = `対話物語モード。登場人物に会話させて本質が何かを考えさせる。
   
   `
         sendChatRequest(ask, false, system);
     }
     else if (model == "deep") {
-        var system = `超深層思考モード。より高度な厳密性、細部への注意、そして多角的な検証を実行します。まずタスクの概要をまとめ、問題をサブタスクに分解することから始めてください。各サブタスクについて、最初は無関係またはありそうにないと思われるものも含め、複数の視点を探求してください。あらゆる段階で、自身の仮定を意図的に反証または挑戦することを試みてください。全てを三重に検証してください。各ステップを批判的にレビューし、あなたの論理、仮定、結論を精査し、不確実性や代替的な視点を明確に指摘してください。代替的な方法論やツールを用いてあなたの推論を独立して検証し、全ての事実、推論、結論を外部データ、計算、または権威ある情報源と照合してください。通常使用する検証ツールや方法の少なくとも2倍の数を意図的に探し出し、使用してください。あなたの主張を相互検証するために、数学的な検証、ウェブ検索 (のシミュレーション)、論理評価フレームワーク、および追加リソースを明確かつ積極的に使用してください。あなたの解決策に完全に自信がある場合でも、弱点、論理的なギャップ、隠れた仮定、または見落としを体系的に探すために、追加の時間と労力を明確に割いてください。これらの潜在的な落とし穴と、それらにどのように対処したかを明確に文書化してください。あなたの分析が堅牢で完全であると完全に確信したら、意図的に一時停止し、思考の連鎖全体を最初からもう一度再考するように強制してください。この最後の内省的なステップを明確に詳述してください。
+        system = `超深層思考モード。より高度な厳密性、細部への注意、そして多角的な検証を実行します。まずタスクの概要をまとめ、問題をサブタスクに分解することから始めてください。各サブタスクについて、最初は無関係またはありそうにないと思われるものも含め、複数の視点を探求してください。あらゆる段階で、自身の仮定を意図的に反証または挑戦することを試みてください。全てを三重に検証してください。各ステップを批判的にレビューし、あなたの論理、仮定、結論を精査し、不確実性や代替的な視点を明確に指摘してください。代替的な方法論やツールを用いてあなたの推論を独立して検証し、全ての事実、推論、結論を外部データ、計算、または権威ある情報源と照合してください。通常使用する検証ツールや方法の少なくとも2倍の数を意図的に探し出し、使用してください。あなたの主張を相互検証するために、数学的な検証、ウェブ検索 (のシミュレーション)、論理評価フレームワーク、および追加リソースを明確かつ積極的に使用してください。あなたの解決策に完全に自信がある場合でも、弱点、論理的なギャップ、隠れた仮定、または見落としを体系的に探すために、追加の時間と労力を明確に割いてください。これらの潜在的な落とし穴と、それらにどのように対処したかを明確に文書化してください。あなたの分析が堅牢で完全であると完全に確信したら、意図的に一時停止し、思考の連鎖全体を最初からもう一度再考するように強制してください。この最後の内省的なステップを明確に詳述してください。
   `
         sendChatRequest(ask, false, system);
     }
@@ -145,19 +141,4 @@ ${preAnswer.innerText}
         sendChatRequest(ask, false, "箇条書き");
     }
 }
-
-
-// document.addEventListener('keydown', function(event) {
-//     // CtrlキーとCキーが押された場合
-//     if (event.ctrlKey  && event.key === 'c') {
-//         event.preventDefault(); // デフォルトのコピー動作を防ぐ
-
-//         const ansText = document.querySelector('.ans').innerText;
-//         navigator.clipboard.writeText(ansText).then(() => {
-//             alert('テキストがコピーされました！');
-//         }).catch(err => {
-//             console.error('コピーに失敗しました:', err);
-//         });
-//     }
-// });
 

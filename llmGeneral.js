@@ -3,7 +3,7 @@ const clipboardIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height
 <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
 </svg>`
 
-async function sendChatRequest(ask, agenda, system) {
+async function sendChatRequest(ask, agenda, system,history = "") {
     var num = 0;
     // 整理できる部分 
     var allQuestion = document.getElementsByName('question')[num].innerHTML = "";
@@ -25,11 +25,16 @@ async function sendChatRequest(ask, agenda, system) {
         answer.style.display = "none";
     } else {
         answer.style.display = "";
-        question.innerHTML = marked.parse(ask);
+        var displayAsk = ask;
+        if(history) {
+            displayAsk += "<br>[返信モード]";
+        }
+   
+        question.innerHTML = marked.parse(displayAsk);
     }
 
     answer.innerHTML = road;
-    var content = await gemini(ask, agenda, system);
+    var content = await gemini(ask, agenda, system , history);
     // var content = await llama(ask);
 
     if (agenda) {
@@ -71,7 +76,6 @@ ${marked.parse(content)}<br>
 
 };
 
-// 今は一回分の返信のみ対応。面倒で、、
 async function gemini(ask, agenda, system = "", history = "") {
     const apiKey = 'AIzaSyC1d-U0u7nZZ-1zoE6wwTHVJ7xsj2OnVJ';
     // const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-002:generateContent?key="+apiKey;
@@ -86,7 +90,6 @@ async function gemini(ask, agenda, system = "", history = "") {
             role: "model",
             parts: [{ text: history }]
         });
-        alert(history);
     }
     contents.push({ role: "user", parts: [{ text: ask }] });
 
