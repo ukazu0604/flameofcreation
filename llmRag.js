@@ -3,11 +3,8 @@ async function RAG(ask) {
     // 改行をスペースに置き換える
     ask = ask.replace(/\n/g, '');
     var system =
-        `あなたはネットで検索する単語を生成するボットです。
-適切な検索ワードのみを一行で返答してください。
-意味を取り違えないように慎重に答えてください。
-中国のサイトが引っかかってしまうので、ひらがなを一文字以上含めてください。
-`
+        `ネット検索する検索ワードのみを返答してください。英語または、日本語でユーザーの質問に関連するキーワードを含めてください。中国サイトばっかり引っかかるので漢字だけのキーワードは避けてください。
+        もし、ユーザーの質問に対して検索ワードが思いつかない場合は、ユーザーの質問をそのまま返答してください。`;
     var query = await sendChatRequest(ask, false, system);
     var question = document.getElementsByName('question')[0];
     question.innerHTML = marked.parse("##### 検索中…");
