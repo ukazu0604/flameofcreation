@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes"> -->
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="images/favicon.ico">
-    <title>Flame of Creation</title>
 
-    <script>
-      if ('serviceWorker' in navigator) {
-          window.addEventListener('load', () => {
-              navigator.serviceWorker.register('sw.js')
-              .then(reg => console.log('Service Worker registered', reg))
-              .catch(err => console.log('Service Worker registration failed', err));
-          });
-      }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes"> -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="images/favicon.ico">
+  <title>Flame of Creation</title>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => console.log('Service Worker registered', reg))
+          .catch(err => console.log('Service Worker registration failed', err));
+      });
+    }
   </script>
 
 </head>
@@ -24,6 +25,7 @@
 <!-- Bootstrap CSS -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="index.css">
+
 <body>
   <div class="container">
     <div class="row justify-content-center">
@@ -34,8 +36,7 @@
         <div name="answer" class="text-left mt-3 p-3 border rounded"
           style="display:none;border: 2px solid #000;background-color: #292525;color:"></div>
         <div id="result-div" class="mt-3"></div>
-        <textarea id="message" class="form-control mt-3" cols="80" rows="10"
-					placeholder="ここにメッセージを入力..."></textarea>
+        <textarea id="message" class="form-control mt-3" cols="80" rows="10" placeholder="ここにメッセージを入力..."></textarea>
         <div class="text-center mt-4">
           <button id="newline-btn" class="btn btn-outline-primary">↩↩</button>
           <button id="start-btn" class="btn btn-custom mr-2">Start</button>
@@ -46,11 +47,11 @@
             <option value="qa">Q&A</option>
             <option value="deep">deepThink</option>
             <option value="story">story</option>
-						<option value="normal">normal</option>
-						<option value="rag">research</option>
-						<option value="agenda">Agenda</option>
+            <option value="normal">normal</option>
+            <option value="rag">research</option>
+            <option value="agenda">Agenda</option>
             <option value="kihon">基本情報(メンテ中)</option>
-					</select>
+          </select>
           <div style="text-align: left;">
 
             <svg id="mindmap" style="width: 70vw; height:50vw"></svg>
@@ -63,27 +64,29 @@
 
 
   <!-- Bootstrap JSと依存ライブラリ -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<svg id="mindmap" style="width: 100vw; height: 100vh"></svg>
-<script src="https://unpkg.com/markmap-lib@0.14.4/dist/browser/index.min.js"></script>
-<script src="https://unpkg.com/d3@6.7.0/dist/d3.min.js"></script>
-<script src="https://unpkg.com/markmap-view@0.14.4/dist/index.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <svg id="mindmap" style="width: 100vw; height: 100vh"></svg>
+  <script src="https://unpkg.com/markmap-lib@0.14.4/dist/browser/index.min.js"></script>
+  <script src="https://unpkg.com/d3@6.7.0/dist/d3.min.js"></script>
+  <script src="https://unpkg.com/markmap-view@0.14.4/dist/index.min.js"></script>
 
-<script src="agent.js"></script>
-<script src="shortcut.js"></script>
-<script src="markmap.js"></script>
-<script src="llmGeneral.js"></script>
-<script src="llmRag.js"></script>
-<script src="kihon.js"></script>
-<script src="voice.js"></script>
+  <script src="agent.js"></script>
+  <script src="shortcut.js"></script>
+  <script src="markmap.js"></script>
+  <script src="llmGeneral.js"></script>
+  <script src="llmRag.js"></script>
+  <script src="kihon.js"></script>
+  <script src="voice.js"></script>
 
   <script>
-    var welcome = async()=>{
-      var content = await gemini("人生で今日が一番若い日です　的な頑張りたくなることを言って", false);
+    var welcome = async () => {
+      var content = await gemini("人生で今日が一番若い日です。人生を今から変えよう　的な頑張りたくなることを短く１文で言って", false);
+      // プレースホルダーを生成された内容に設定
+      document.getElementById("message").placeholder = content;
       displayMap(content);
     }
     welcome();
