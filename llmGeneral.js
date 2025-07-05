@@ -129,6 +129,14 @@ async function gemini(ask, agenda, system = "", history = "") {
         if (!response.ok) {
             const errorData = await response.json(); // エラーレスポンスを解析
             const errorMessage = errorData.error ? errorData.error.message : `HTTP error! status: ${response.status}`;
+
+            // 割り当て制限のエラーをチェック
+            if (response.status === 429 || (errorData.error && (errorData.error.message.includes("quota") || errorData.error.message.includes("rate limit")))) {
+                alert(`APIの利用上限に達しました。しばらく時間をおいてから再度お試しください.\n詳細: ${errorMessage}`);
+            } else {
+                // その他のAPIエラー
+                alert(`APIエラーが発生しました。\n詳細: ${errorMessage}`);
+            }
             throw new Error(errorMessage); // より具体的なエラーメッセージを投げる
         }
         const jsonData = await response.json();
@@ -139,19 +147,21 @@ async function gemini(ask, agenda, system = "", history = "") {
             console.log("成功！");
         } catch (error) {
             console.error("JSON パースエラーまたはデータアクセスエラー:", error);
-            // エラーハンドリングを追加: candidates配列がない場合、parts配列がない場合、parts[0]にアクセスできない場合など
+            let alertMessage = "API応答の解析中にエラーが発生しました。";
             if (!jsonData.candidates || jsonData.candidates.length === 0) {
-                console.error("candidates 配列が空です");
-                console.log(jsonData);
+                alertMessage += "\n候補が見つかりませんでした。";
             } else if (!jsonData.candidates[0].content || !jsonData.candidates[0].content.parts || jsonData.candidates[0].content.parts.length === 0) {
-                console.error("content.parts 配列が空です");
-                console.log(jsonData.candidates[0]);
+                alertMessage += "\n応答内容が空です。";
             } else {
-                console.error("予期せぬエラー:", error);
+                alertMessage += `\n詳細: ${error.message}`;
             }
+            alert(alertMessage);
+            throw error; // エラーを再スローして、呼び出し元で処理できるようにする
         }
     } catch (error) {
         console.error("Google API エラー:", error); // エラーの詳細を出力
+        // ネットワークエラーなど、fetch自体が失敗した場合
+        alert(`APIリクエスト中にエラーが発生しました。\nネットワーク接続を確認してください。\n詳細: ${error.message}`);
     }
     return content;
 }
