@@ -129,7 +129,22 @@ function isMobile() {
     return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
 
-// テキストを読み上げるメソッド'.text-to-read'
+// 任意のテキストを読み上げる関数
+function speak(text) {
+    // SpeechSynthesisのインスタンスを作成
+    var utterance = new SpeechSynthesisUtterance(text);
+
+    // 音声の設定（オプション）
+    utterance.lang = 'ja-JP'; // 日本語に設定
+    utterance.volume = 1; // 音量（0.0 から 1.0）
+    utterance.rate = isMobile() ? 1.5 : 3; // 話す速度（0.1 から 10）
+    utterance.pitch = isMobile() ? 1.0 : 1.3; // 声の高さ（0 から 2）
+
+    // 音声を合成して再生
+    window.speechSynthesis.speak(utterance);
+}
+
+// 既存のreadText関数を、新しいspeak関数を利用するように修正
 function readText(className) {
     // すべてのテキストを取得
     var texts = document.querySelectorAll(`.${className}`);
@@ -140,17 +155,7 @@ function readText(className) {
         combinedText += element.textContent + ' '; // textContentで隠れたテキストも取得
     });
 
-    // SpeechSynthesisのインスタンスを作成
-    var utterance = new SpeechSynthesisUtterance(combinedText);
-
-    // 音声の設定（オプション）
-    utterance.lang = 'ja-JP'; // 日本語に設定
-    utterance.volume = 1; // 音量（0.0 から 1.0）
-    utterance.rate = isMobile() ? 1.5 : 3; // 話す速度（0.1 から 10）
-    utterance.pitch = isMobile() ? 1.0 : 1.3; // 声の高さ（0 から 2）
-
-    // 音声を合成して再生
-    window.speechSynthesis.speak(utterance);
+    speak(combinedText);
 }
 
 function readAllText() {

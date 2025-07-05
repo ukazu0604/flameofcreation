@@ -70,7 +70,7 @@ async function sendChatRequest(ask, agenda = false, system = "", history = "") {
         const readButton = document.createElement('button');
         readButton.className = 'btn btn-secondary copy-button';
         readButton.innerHTML = speakerIcon;
-        readButton.onclick = () => readText('ans');
+        readButton.onclick = () => speak(content);
 
         answer.innerHTML = '';
         answer.appendChild(contentDiv);
