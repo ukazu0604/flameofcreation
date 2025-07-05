@@ -39,7 +39,7 @@ function addNewline() {
     });
 }
 
-var selectBox = document.getElementById('model-select');
+var selectBox = document.getElementById('function-select');
 const optionsLength = selectBox.options.length;
 
 document.addEventListener("keydown", function (event) {
@@ -92,7 +92,7 @@ async function cleanAndRequest() {
 
     //二回目以降は改行を入れて会話が続くようにする　ここ、改善ポイント
     finalTranscript = '\n';
-    var model = document.getElementById('model-select').value;
+    var model = document.getElementById('function-select').value;
     var num = 0;
     var preAnswer = num != 0 ? document.getElementsByName('answer')[num - 1] : document.getElementsByName('answer')[num]
     // ２回改行はRAG
