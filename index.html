@@ -41,24 +41,27 @@
           <button id="newline-btn" class="btn btn-outline-primary">↩↩</button>
           <button id="start-btn" class="btn btn-custom mr-2">Start</button>
           <button id="stop-btn" class="btn btn-secondary mr-2">Stop</button>
-          <label for="function-select" class="mr-2"></label>
-          <select id="function-select" class="form-control d-inline-block dark-mode-select" style="width: auto;">
-            <option value="agent">auto</option>
-            <option value="qa">Q&A</option>
-            <option value="deep">deepThink</option>
-            <option value="story">story</option>
-            <option value="normal">normal</option>
-            <option value="rag">research</option>
-            <option value="talk">talk</option>
-            <option value="agenda">Agenda</option>
-            <option value="kihon">基本情報(メンテ中)</option>
-          </select>
-          <div id='maintable' class="mt-5"></div>
-          <div style="text-align: left;">
+          <div class="d-inline-flex align-items-center">
+            <select id="function-select" class="form-control d-inline-block dark-mode-select mr-3" style="width: auto;">
+              <option value="agent">auto</option>
+              <option value="qa">Q&A</option>
+              <option value="deep">deepThink</option>
+              <option value="story">story</option>
+              <option value="normal">normal</option>
+              <option value="rag">research</option>
+              <option value="talk">talk</option>
+              <option value="agenda">Agenda</option>
+              <option value="kihon">基本情報(メンテ中)</option>
+            </select>
+            <select id="model-select" class="form-control d-inline-block dark-mode-select" style="width: auto;">
+            </select>
+          </div>
+        </div>
+        <div id='maintable' class="mt-5"></div>
+        <div style="text-align: left;">
 
             <svg id="mindmap" style="width: 70vw; height:50vw"></svg>
           </div>
-        </div>
       </div>
     </div>
   </div>
@@ -78,19 +81,65 @@
   <script src="agent.js"></script>
   <script src="shortcut.js"></script>
   <script src="markmap.js"></script>
+  <script src="models.js"></script>
   <script src="llmGeneral.js"></script>
   <script src="llmRag.js"></script>
   <script src="kihon.js"></script>
   <script src="voice.js"></script>
 
   <script>
+    // AIモデルのドロップダウンを動的に生成
+    document.addEventListener('DOMContentLoaded', () => {
+      const modelSelect = document.getElementById('model-select');
+      const functionSelect = document.getElementById('function-select');
+
+      // モデルオプションを動的に生成
+      for (const modelName in AIModels) {
+        const option = document.createElement('option');
+        option.value = modelName;
+        option.textContent = modelName;
+        modelSelect.appendChild(option);
+      }
+
+      // localStorageから保存されたモデルを選択
+      const savedModel = localStorage.getItem('selectedModel');
+      if (savedModel && modelSelect.querySelector(`option[value="${savedModel}"]`)) {
+        modelSelect.value = savedModel;
+      } else if (modelSelect.options.length > 0) {
+        modelSelect.selectedIndex = 0;
+      }
+      welcome();
+
+      // localStorageから保存された機能を選択
+      const savedFunction = localStorage.getItem('selectedFunction');
+      console.log('Saved function from localStorage:', savedFunction);
+      if (savedFunction && functionSelect.querySelector(`option[value="${savedFunction}"]`)) {
+        functionSelect.value = savedFunction;
+        console.log('Function select value set to:', functionSelect.value);
+      } else if (functionSelect.options.length > 0) {
+        functionSelect.selectedIndex = 0;
+        console.log('Function select reset to default (first option):', functionSelect.value);
+      }
+
+      // モデル選択が変更されたときに保存
+      modelSelect.addEventListener('change', () => {
+        localStorage.setItem('selectedModel', modelSelect.value);
+        console.log('Model selected and saved:', modelSelect.value);
+      });
+
+      // 機能選択が変更されたときに保存
+      functionSelect.addEventListener('change', () => {
+        localStorage.setItem('selectedFunction', functionSelect.value);
+        console.log('Function selected and saved:', functionSelect.value);
+      });
+    });
+
     var welcome = async () => {
       var content = await gemini("人生で今日が一番若い日です。人生を今から変えよう　的な頑張りたくなることを短く１文で言って", false);
       // プレースホルダーを生成された内容に設定
       document.getElementById("message").placeholder = content;
       displayMap(content);
     }
-    welcome();
   </script>
 </body>
 

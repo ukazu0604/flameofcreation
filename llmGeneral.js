@@ -88,9 +88,10 @@ async function sendChatRequest(ask, agenda = false, system = "", history = "") {
 
 async function gemini(ask, agenda, system = "", history = "") {
     const apiKey = 'AIzaSyC1d-U0u7nZZ-1zoE6wwTHVJ7xsj2OnVJ';
-    // const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-002:generateContent?key="+apiKey;
-    // const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key="+apiKey;
-    const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=" + apiKey + "c"
+    const modelSelect = document.getElementById('model-select');
+    const selectedModel = modelSelect.value;
+    const baseUrl = AIModels[selectedModel];
+    const url = `${baseUrl}?key=${apiKey}c`;
     // const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8B:generateContent?key="+apiKey;
 
     const contents = [];
