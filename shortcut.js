@@ -163,9 +163,9 @@ async function deepthink(ask) {
     var q = await sendChatRequest(ask, false, system);
     sendChatRequest(ask, false, q);
 }
-function talk(ask) {
+async function talk(ask) {
     system = `あなたはユーザーと雑談をするフレンドリーなAIです。ユーザーの質問に答えたり、話題を広げたりしてください。`;
-    var text = sendChatRequest(ask, false, system);
+    var text = await sendChatRequest(ask, false, system);
     speak(text);
 }
 function normal(ask) {
