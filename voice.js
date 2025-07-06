@@ -58,14 +58,8 @@ recognition.onresult = (event) => {
 
     timer = setTimeout(() => {
         if (num == id & listening === false & finalTranscript != "" & document.getElementById('message').value != "") {
-            // var ask = finalTranscript;
             finalTranscript = "";
-            handleSubmit();
-            // document.getElementById('message').value = "";
-            // document.getElementById('result-div').innerHTML = '';
-            // sendChatRequest(ask, true);
-            // alert(ask);
-
+            // handleSubmit();一旦送らない
         }
     }, 1000); // 待つ
     // alert(finalTranscript)
@@ -159,10 +153,3 @@ function readText(className) {
     speak(combinedText);
 }
 
-function readAllText() {
-    readText('mondai');
-    readText('mondai');
-    readText('yougo');
-    readText('gemini');
-    readText('kotae');
-}
