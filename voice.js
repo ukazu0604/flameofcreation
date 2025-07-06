@@ -58,11 +58,12 @@ recognition.onresult = (event) => {
 
     timer = setTimeout(() => {
         if (num == id & listening === false & finalTranscript != "" & document.getElementById('message').value != "") {
-            var ask = finalTranscript;
+            // var ask = finalTranscript;
             finalTranscript = "";
-            document.getElementById('message').value = "";
-            document.getElementById('result-div').innerHTML = '';
-            sendChatRequest(ask, true);
+            handleSubmit();
+            // document.getElementById('message').value = "";
+            // document.getElementById('result-div').innerHTML = '';
+            // sendChatRequest(ask, true);
             // alert(ask);
 
         }

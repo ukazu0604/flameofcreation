@@ -66,13 +66,17 @@ document.addEventListener("keydown", function (event) {
 
 
 var ask = "";
+function handleSubmit() {
+    scrollToTop();
+    cleanAndRequest();
+}
+
 // Enterキーで送信する
 document.getElementById('message').addEventListener('keydown', function (event) {
     // Shift+Enterで改行、Enterだけで送信
     if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
-        scrollToTop();
-        cleanAndRequest();
+        handleSubmit();
     }
 });
 
