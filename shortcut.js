@@ -40,25 +40,37 @@ function addNewline() {
 }
 
 var selectBox = document.getElementById('function-select');
-const optionsLength = selectBox.options.length;
+var modelSelectBox = document.getElementById('model-select');
 
 document.addEventListener("keydown", function (event) {
-    const currentIndex = selectBox.selectedIndex;
-    if (event.key === 'ArrowUp') {
-        // 上矢印で前の選択肢に移動
-        if (currentIndex > 0) {
-            selectBox.selectedIndex = currentIndex - 1;
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+        let targetSelectBox;
+
+        if (event.shiftKey) {
+            targetSelectBox = modelSelectBox;
         } else {
-            selectBox.selectedIndex = optionsLength - 1; // Wrap to the last option
+            targetSelectBox = selectBox;
         }
-        event.preventDefault();
-    } else if (event.key === 'ArrowDown') {
-        // 下矢印で次の選択肢に移動
-        if (currentIndex < optionsLength - 1) {
-            selectBox.selectedIndex = currentIndex + 1;
-        } else {
-            selectBox.selectedIndex = 0; // Wrap to the first option
+
+        const currentIndex = targetSelectBox.selectedIndex;
+        const targetOptionsLength = targetSelectBox.options.length; // ここで最新の長さを取得
+
+        if (event.key === 'ArrowUp') {
+            // 上矢印で前の選択肢に移動
+            if (currentIndex > 0) {
+                targetSelectBox.selectedIndex = currentIndex - 1;
+            } else {
+                targetSelectBox.selectedIndex = targetOptionsLength - 1; // Wrap to the last option
+            }
+        } else if (event.key === 'ArrowDown') {
+            // 下矢印で次の選択肢に移動
+            if (currentIndex < targetOptionsLength - 1) {
+                targetSelectBox.selectedIndex = currentIndex + 1;
+            } else {
+                targetSelectBox.selectedIndex = 0; // Wrap to the first option
+            }
         }
+        targetSelectBox.dispatchEvent(new Event('change')); // 手動でchangeイベントを発火
         event.preventDefault();
     }
 });
