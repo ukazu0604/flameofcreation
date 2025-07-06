@@ -112,7 +112,8 @@ async function cleanAndRequest() {
         agent(ask);
     }
     else if (model == "agenda") {
-        agenda(ask);
+        const history = preAnswer ? preAnswer.innerText : "";
+        agenda(ask, history);
     } else if (!isNaN(parseFloat(ask)) || ask == "") {
         // 未入力は最新のものを
         ask = ask === "" ? -1 : ask;
@@ -155,12 +156,24 @@ function normal(ask) {
     system = "できるだけ箇条書き";
     sendChatRequest(ask, false, system);
 }
-function agenda(ask) {
-    system = `##### agenda
-##### あなたは、スケジュール管理をする人です。
+function agenda(ask, history) {
+    const system = `あなたは優秀なスケジュール管理アシスタントです。
+ユーザーの指示と過去の履歴を基に、スケジュールをJSON形式で更新してください。
+
+##### 指示
+ユーザーからの追加の入力: "${ask}"
+
+##### 履歴 (現状のスケジュール。これを修正する。)
+${history}
+
 ##### フォーマット
-{"schedule": [{"time": "", "activity": ""}, {"time": "", "activity": ""}]}
-##### 履歴
-${preAnswer.innerText}`
-    sendChatRequest(ask, true, system);
+{"schedule": [
+    {"time": "HH:MM", "activity": "内容"},
+    {"time": "HH:MM", "activity": "内容"}
+]}
+
+##### 出力
+上記の指示と履歴を考慮して、更新された完全なスケジュールをJSON形式で出力してください。履歴がない場合は新規に作成してください。`;
+
+    sendChatRequest(ask, true, system, history);
 }
