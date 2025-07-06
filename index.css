@@ -1,4 +1,4 @@
-    body {
+body {
       background-color: #121212;
       color: #E0E0E0;
     }
@@ -132,4 +132,18 @@
 
     .custom-button:hover {
       background-color: #222; /* ホバー時さらに濃い背景色 */
+    }
+
+    .recording-active {
+      box-shadow: 0 0 10px 5px #03DAC6, 0 0 20px 10px #03DAC6;
+      animation: pulse 1.5s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from {
+        box-shadow: 0 0 10px 5px #03DAC6, 0 0 20px 10px #03DAC6;
+      }
+      to {
+        box-shadow: 0 0 15px 8px #03DAC6, 0 0 30px 15px #03DAC6;
+      }
     }

@@ -106,8 +106,8 @@ async function cleanAndRequest() {
     document.getElementById('message').value = '';
     document.getElementById('result-div').innerHTML = '';
 
-    //二回目以降は改行を入れて会話が続くようにする　ここ、改善ポイント
-    finalTranscript = '\n';
+    // //二回目以降は改行を入れて会話が続くようにする　ここ、改善ポイント
+    // finalTranscript = '\n';
     var model = document.getElementById('function-select').value;
     var num = 0;
     var preAnswer = num != 0 ? document.getElementsByName('answer')[num - 1] : document.getElementsByName('answer')[num]

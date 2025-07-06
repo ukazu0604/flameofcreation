@@ -69,11 +69,17 @@ recognition.onresult = (event) => {
 
 startBtn.onclick = () => {
     recognition.start();
+    startBtn.classList.add('recording-active'); // クラスを追加
 }
 stopBtn.onclick = () => {
     window.speechSynthesis.cancel();
     recognition.stop();
+    startBtn.classList.remove('recording-active'); // クラスを削除
 }
+
+recognition.onend = () => {
+    startBtn.classList.remove('recording-active'); // 認識終了時にもクラスを削除
+};
 
 
 // ここからjsonで受け取ったときのテーブル追加処理
