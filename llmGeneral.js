@@ -63,12 +63,34 @@ async function sendChatRequest(ask, agenda = false, system = "", history = "") {
     // var content = await llama(ask);
 
     if (agenda) {
-        try {
-            createTable(content);
-            answer.innerHTML = marked.parse(content);
-            var allQuestion = document.getElementsByName('question')[num].innerHTML = "";
-        } catch {
-            answer.innerHTML = marked.parse(content);
+        let currentContent = content;
+        let validJson = false;
+        const maxRetries = 3; // 最大3回まで修正を試みる
+
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                // JSONとしてパースできるか試す
+                JSON.parse(currentContent);
+                // 成功すればテーブルを作成してループを抜ける
+                createTable(currentContent);
+                var allQuestion = document.getElementsByName('question')[num].innerHTML = "";
+                validJson = true;
+                break;
+            } catch (e) {
+                console.error(`JSON Parse Error (Attempt ${i + 1}):`, e);
+                answer.innerHTML = marked.parse(`### JSON形式エラー (試行 ${i + 1}/${maxRetries})\nAIの応答が有効なJSON形式ではありませんでした。修正を試みます...`);
+
+                // AIに修正を依頼する。元のシステムプロンプトを再利用し、エラー内容を伝える。
+                const correctionAsk = `あなたの前の応答は無効なJSONでした。もう一度、指示とフォーマットに厳密に従って、有効なJSONを生成してください。\n\nこれがあなたの無効な応答です:\n${currentContent}`;
+                // 重要な点：元の`system`プロンプトと`history`を再利用して、AIに完全なコンテキストを渡す
+                currentContent = await gemini(correctionAsk, true, system, history);
+            }
+        }
+
+        // すべての試行が失敗した場合
+        if (!validJson) {
+            console.error("Failed to get valid JSON after retries.");
+            answer.innerHTML = marked.parse("### JSON形式エラー\nAIの応答を修正できませんでした。\n\n---\n" + currentContent);
         }
     } else {
         // Copy button
