@@ -57,7 +57,7 @@ Geminiからの応答が有効なJSON形式ではありませんでした。
     var geminiAns = `
 <details><summary>Gemini!!</summary>
 <br>
-<button class="btn custom-button" onclick="readText('gemini')">読み上げる</button><br>
+<button class="btn custom-button" onclick="readText('gemini')">${speakerIcon}</button><br>
 <div class="gemini">
 ${jsonObject.answer}<br>
 ${jsonObject.confidence}<br>
@@ -99,7 +99,7 @@ ${response[0]}
     var geminiAns = `
 <details><summary>用語</summary>
 <br>
-<button class="btn custom-button" onclick="readText('yougo')">読み上げる</button><br>
+<button class="btn custom-button" onclick="readText('yougo')">${speakerIcon}</button><br>
 <div class="yougo">
 ${marked.parse(geminiResponse)}<br>
 </div>
@@ -118,7 +118,10 @@ function startCounter(interval) {
     }
     intervalId = setInterval(() => {
         counter++;
-        document.getElementById("counter").textContent = counter;
+        const counterElement = document.getElementById("counter");
+        if (counterElement) {
+            counterElement.textContent = counter;
+        }
     }, interval);
 }
 
