@@ -5,21 +5,27 @@ function kihon(ask) {
     document.getElementsByName('answer')[0].style.display = "none";
     var kihon = document.getElementById('kihon');
     kihon.innerHTML = "作成中…";
-    google.script.run
-        .withSuccessHandler(async function (response) {
+
+    const gasWebAppUrl = "https://script.google.com/macros/s/AKfycbwf-On9SlCQlk91oMpatTv5gWMVv7Jd5CMmGNfJvEPHDAwW2It9Sq72DMW9fKY49e5t/exec";
+
+    fetch(`${gasWebAppUrl}?ask=${encodeURIComponent(ask)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(async response => {
             // サーバーからのレスポンスを表示する
             kihon.innerHTML = marked.parse(response[0] + response[1]);
             kihon.innerHTML = marked.parse(response[0] + await explain(response) + await geminiAnswer(response) + response[1]);
             startCounter(1000);
             displayMap(kihon.innerHTML.replace(/<[^>]*>/g, ''));
-            // console.log(kihon.innerHTML.replace(/<[^>]*>/g, ''))
         })
-        .withFailureHandler(function (error) {
-            console.error("エラーが発生しました:", error.message);
-            kihon.innerHTML = "エラーが発生しました: " + error.message;
-        })
-        .getData(ask);
-
+        .catch(error => {
+            console.error("基本情報の取得中にエラーが発生しました:", error.message);
+            kihon.innerHTML = "<p style=\"color: red;\">基本情報の取得に失敗しました。<br>詳細: " + error.message + "</p>";
+        });
 }
 
 
@@ -30,8 +36,21 @@ ${response[0]}
 ## フォーマット
 {{"answer": "あなたの回答", "confidence": "この問題に間違えると人生が終わります。どれくらいの正解の自信があるかを正直に教えて下さい。"}}
 `;
-    // JSONをオブジェクトに変換
-    var jsonObject = JSON.parse(await gemini(prom, true));
+    let jsonObject;
+    try {
+        // JSONをオブジェクトに変換
+        jsonObject = JSON.parse(await gemini(prom, true));
+    } catch (error) {
+        console.error("Geminiからの応答がJSON形式ではありませんでした:", error);
+        return `<details><summary>Gemini!!</summary>
+<br>
+<div class="gemini" style="color: red;">
+Geminiからの応答が有効なJSON形式ではありませんでした。
+</div>
+</details><br>
+`;
+    }
+
     // プロパティにアクセス
     console.log(jsonObject.answer);
     console.log("自信度:", jsonObject.confidence);
@@ -63,12 +82,26 @@ ${response[0]}
 * **用語**：説明
 
 `;
+    let geminiResponse;
+    try {
+        geminiResponse = await gemini(prom, false);
+    } catch (error) {
+        console.error("Geminiからの応答が期待する形式ではありませんでした (explain):");
+        return `<details><summary>用語</summary>
+<br>
+<div class="yougo" style="color: red;">
+用語の解説を取得できませんでした。
+</div>
+</details><br>
+`;
+    }
+
     var geminiAns = `
 <details><summary>用語</summary>
 <br>
 <button class="btn custom-button" onclick="readText('yougo')">読み上げる</button><br>
 <div class="yougo">
-${marked.parse(await gemini(prom, false))}<br>
+${marked.parse(geminiResponse)}<br>
 </div>
 </details><br>
   `;
