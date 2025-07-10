@@ -150,7 +150,7 @@ function speak(text) {
         if (functionSelect && functionSelect.value === 'talk') {
             setTimeout(() => {
                 recognition.start();
-            }, 3000); // 1秒待ってから認識を開始
+            }, 300); // 1秒待ってから認識を開始
         }
     };
 

@@ -164,7 +164,7 @@ async function deepthink(ask) {
     sendChatRequest(ask, false, q);
 }
 async function talk(ask) {
-    system = `あなたはユーザーと雑談をするフレンドリーなAIです。ユーザーの質問に答えたり、話題を広げたりしてください。`;
+    system = `あなたはユーザーと直接会話します。聞き手に回ってください。必ず相手よりも少ない文字数で答えてください。そっけないことを期待していますがなにか質問はしてください。`;
     var text = await sendChatRequest(ask, false, system);
     speak(text);
 }
