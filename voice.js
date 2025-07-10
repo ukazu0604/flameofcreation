@@ -125,6 +125,14 @@ function createTable(content) {
     }
     // 生成したtable要素を追加する
     document.getElementById('maintable').appendChild(table);
+
+    // agendaモードで、かつユーザーが音声認識を開始していた場合のみ認識を再開
+    const functionSelect = document.getElementById('function-select');
+    if (functionSelect && functionSelect.value === 'agenda' && recognitionIntended) {
+        setTimeout(() => {
+            recognition.start();
+        }, 300); // 0.3秒待ってから認識を開始
+    }
 }
 
 
