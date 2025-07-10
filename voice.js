@@ -59,8 +59,7 @@ recognition.onresult = (event) => {
     timer = setTimeout(() => {
         if (num == id & listening === false & finalTranscript != "" & document.getElementById('message').value != "") {
             finalTranscript = "";
-            handleSubmit();一旦送らない
-            // alert("送信")
+            handleSubmit();
         }
     }, 1000); // 待つ
     // alert(finalTranscript)

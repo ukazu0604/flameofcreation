@@ -8,7 +8,17 @@ const speakerIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="
 </svg>`;
 
 
+let isProcessing = false; // グローバルな処理中フラグ
+
+
 async function sendChatRequest(ask, agenda = false, system = "", history = "") {
+    if (isProcessing) {
+        console.log("Already processing a request. Ignoring.");
+        return;
+    }
+
+    isProcessing = true;
+
     var num = 0;
     // 整理できる部分 
     var allQuestion = document.getElementsByName('question')[num].innerHTML = "";
@@ -17,6 +27,7 @@ async function sendChatRequest(ask, agenda = false, system = "", history = "") {
     var preAnswer = num != 0 ? document.getElementsByName('answer')[num - 1] : document.getElementsByName('answer')[num]
     var question = document.getElementsByName('question')[num]
     var veryLongText = '';
+
 
     // 待ちのメッセージ
     const length = ask.length;
@@ -39,7 +50,16 @@ async function sendChatRequest(ask, agenda = false, system = "", history = "") {
     }
 
     answer.innerHTML = road;
-    var content = await gemini(ask, agenda, system, history);
+    var content;
+    try {
+        content = await gemini(ask, agenda, system, history);
+    } catch (error) {
+        alert("Error during Gemini call:", error);
+        content = "エラーが発生しました。"; // エラーメッセージを設定
+    } finally {
+        isProcessing = false;
+    }
+
     // var content = await llama(ask);
 
     if (agenda) {
