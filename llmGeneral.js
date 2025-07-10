@@ -129,11 +129,17 @@ async function sendChatRequest(ask, agenda = false, system = "", history = "") {
 };
 
 async function gemini(ask, agenda, system = "", history = "") {
-    const apiKey = 'AIzaSyC1d-U0u7nZZ-1zoE6wwTHVJ7xsj2OnVJ';
+    const apiKey = getApiKey();
+    if (!apiKey) {
+        alert('APIキーが設定されていないため、リクエストを送信できません。');
+        isProcessing = false; // 処理中フラグをリセット
+        return; // APIキーがなければ処理を中断
+    }
+
     const modelSelect = document.getElementById('model-select');
     const selectedModel = modelSelect.value;
     const baseUrl = AIModels[selectedModel];
-    const url = `${baseUrl}?key=${apiKey}c`;
+    const url = `${baseUrl}?key=${apiKey}`;
     // const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8B:generateContent?key="+apiKey;
 
     const contents = [];
@@ -172,6 +178,23 @@ async function gemini(ask, agenda, system = "", history = "") {
         if (!response.ok) {
             const errorData = await response.json(); // エラーレスポンスを解析
             const errorMessage = errorData.error ? errorData.error.message : `HTTP error! status: ${response.status}`;
+
+            // APIキーが無効な場合のエラーを特別に処理
+            if (errorMessage.includes("API key not valid")) {
+                const changeKey = confirm("APIキーが無効です。新しいキーに変更しますか？");
+                if (changeKey) {
+                    localStorage.removeItem('geminiApiKey'); // 古いキーを削除
+                    const newApiKey = getApiKey(); // 新しいキーの入力を促す
+                    if (newApiKey) {
+                        alert("新しいAPIキーを保存しました。再度操作をお試しください。");
+                    }
+                    // 処理を中断し、ユーザーに再操作を促す
+                    throw new Error("APIキーが更新されました。再実行してください。");
+                } else {
+                    alert("APIキーの変更がキャンセルされたため、リクエストを中止しました。");
+                    throw new Error("APIキーの変更がキャンセルされました。");
+                }
+            }
 
             // 割り当て制限のエラーをチェック
             if (response.status === 429 || (errorData.error && (errorData.error.message.includes("quota") || errorData.error.message.includes("rate limit")))) {
@@ -273,3 +296,17 @@ async function llama(ask, veryLongText) {
     console.log("終了！")
 
 };
+
+function getApiKey() {
+    let apiKey = localStorage.getItem('geminiApiKey');
+    if (!apiKey) {
+        apiKey = prompt('Gemini APIキーを入力してください。');
+        if (apiKey) {
+            localStorage.setItem('geminiApiKey', apiKey);
+        } else {
+            console.error("APIキーが入力されませんでした。");
+            return null;
+        }
+    }
+    return apiKey;
+}
