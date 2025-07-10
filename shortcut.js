@@ -165,7 +165,7 @@ async function deepthink(ask) {
     sendChatRequest(ask, false, q);
 }
 async function talk(ask, history) {
-    system = `あなたはユーザーと直接会話します。聞き手に回ってください。必ず相手よりも少ない文字数で答えてください。そっけないことを期待していますがなにか質問はしてください。`;
+    system = `あなたはユーザーと直接会話します。聞き手に回ってください。必ず相手よりも少ない文字数で答えてください。なにか質問はしてください。迷ったらなぜかを聞いて下さい`;
     var text = await sendChatRequest(ask, false, system, history);
     speak(text);
 }
