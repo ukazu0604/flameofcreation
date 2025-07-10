@@ -67,9 +67,12 @@ recognition.onresult = (event) => {
     // 	finalTranscript + '<i style="color:#ddd;">' + interimTranscript + '</i>';
 }
 
+recognition.onstart = () => {
+    startBtn.classList.add('recording-active'); // クラスを追加
+};
+
 startBtn.onclick = () => {
     recognition.start();
-    startBtn.classList.add('recording-active'); // クラスを追加
 }
 stopBtn.onclick = () => {
     window.speechSynthesis.cancel();
@@ -140,6 +143,16 @@ function speak(text) {
     utterance.volume = 1; // 音量（0.0 から 1.0）
     utterance.rate = isMobile() ? 1.5 : 3; // 話す速度（0.1 から 10）
     utterance.pitch = isMobile() ? 1.0 : 1.3; // 声の高さ（0 から 2）
+
+    // 読み上げ終了時の処理
+    utterance.onend = function () {
+        const functionSelect = document.getElementById('function-select');
+        if (functionSelect && functionSelect.value === 'talk') {
+            setTimeout(() => {
+                recognition.start();
+            }, 3000); // 1秒待ってから認識を開始
+        }
+    };
 
     // 音声を合成して再生
     window.speechSynthesis.speak(utterance);
