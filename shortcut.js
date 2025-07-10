@@ -122,7 +122,8 @@ async function cleanAndRequest() {
         sendChatRequest(ask, false, system, history);
     }
     else if (model == "talk") {
-        talk(ask);
+        const history = preAnswer ? preAnswer.innerText : "";
+        talk(ask, history);
     }
     else if (model == "agent") {
         agent(ask);
@@ -163,9 +164,9 @@ async function deepthink(ask) {
     var q = await sendChatRequest(ask, false, system);
     sendChatRequest(ask, false, q);
 }
-async function talk(ask) {
+async function talk(ask, history) {
     system = `あなたはユーザーと直接会話します。聞き手に回ってください。必ず相手よりも少ない文字数で答えてください。そっけないことを期待していますがなにか質問はしてください。`;
-    var text = await sendChatRequest(ask, false, system);
+    var text = await sendChatRequest(ask, false, system, history);
     speak(text);
 }
 function normal(ask) {
